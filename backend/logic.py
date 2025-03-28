@@ -3,6 +3,8 @@ import re
 from pathlib import Path
 from datetime import datetime
 from urllib.parse import urlparse
+import requests
+import time
 
 def convert_to_df(filepath):
     # Load the log file
@@ -61,3 +63,32 @@ def get_top_referer_domains(df, top_n=10):
     # Count frequency
     top_domains = referer_domains.value_counts().head(top_n)
     return top_domains.reset_index().rename(columns={'index': 'Domain', 'referrer': 'Domains'})
+
+def check_domain_virustotal(domain, api_key):
+    url = f"https://www.virustotal.com/api/v3/domains/{domain}"
+    headers = {"x-apikey": api_key}
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        stats = data.get('data', {}).get('attributes', {}).get('last_analysis_stats', {})
+        # You can return more info if needed
+        return {
+            'domain': domain,
+            'harmless': stats.get('harmless', 0),
+            'malicious': stats.get('malicious', 0),
+            'suspicious': stats.get('suspicious', 0),
+            'undetected': stats.get('undetected', 0),
+        }
+    else:
+        return {'domain': domain, 'error': response.status_code, "response": response.text}
+
+
+def check_domains(domains, api_key, delay=15):
+    results = []
+    for domain in domains:
+        result = check_domain_virustotal(domain, api_key)
+        results.append(result)
+        time.sleep(delay)  # VT API has rate limits for free users
+    return pd.DataFrame(results)

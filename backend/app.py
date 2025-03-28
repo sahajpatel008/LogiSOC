@@ -3,11 +3,15 @@ from pathlib import Path
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-from logic import convert_to_df, get_top_referer_domains, get_top_requested_pages
+from logic import convert_to_df, get_top_referer_domains, get_top_requested_pages, check_domains
+from dotenv import load_dotenv
 import pandas as pd
+import traceback
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
 
+load_dotenv()
+VIRUS_TOTAL_KEY = os.getenv("VIRUS_TOTAL_KEY")
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
@@ -43,8 +47,14 @@ def top_referers():
 
         # Get top referer domains
         result_df = get_top_referer_domains(df)
-        result = result_df.to_dict(orient="records")
+        # Dynamically get path to resources folder
+        resources_path = Path(__file__).resolve().parent / "resources"
+        resources_path.mkdir(exist_ok=True)  # create resources/ if it doesn't exist
 
+        output_csv_path = resources_path / "2_topDomainReferers.csv"
+        result_df.to_csv(output_csv_path, index=False)
+        result = result_df.to_dict(orient="records")
+        
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
@@ -66,6 +76,23 @@ def top_page_visits():
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
+@app.route('/check-domains', methods=['POST'])
+def malicious_domain_check():
+    try:
+        # Read DataFrame from resources/LOGS.csv
+        csv_path = Path(__file__).resolve().parent / "resources" / "2_topDomainReferers.csv"
+        df = pd.read_csv(csv_path)
+        
+        results = check_domains(list(df['Domains']), str(VIRUS_TOTAL_KEY), 2)
+        
+        return jsonify(results.to_dict(orient="records")), 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == '__main__':
