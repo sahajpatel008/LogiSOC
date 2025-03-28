@@ -86,6 +86,11 @@ def malicious_domain_check():
         df = pd.read_csv(csv_path)
         
         results = check_domains(list(df['Domains']), str(VIRUS_TOTAL_KEY), 2)
+        resources_path = Path(__file__).resolve().parent / "resources"
+        resources_path.mkdir(exist_ok=True)  # create resources/ if it doesn't exist
+
+        output_csv_path = resources_path / "3_maliciousDomainsCheck.csv"
+        results.to_csv(output_csv_path, index=False)
         
         return jsonify(results.to_dict(orient="records")), 200
     except ValueError as ve:
