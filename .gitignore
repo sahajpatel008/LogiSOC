@@ -1,2 +1,4 @@
 venv/
 uploads/
+resources/
+backend/__pycache__/
