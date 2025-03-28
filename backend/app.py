@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-from logic import convert_to_df
+from logic import convert_to_df, get_top_referer_domains
+import pandas as pd
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
 
@@ -32,5 +34,22 @@ def upload_file():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/top-referers', methods=['GET'])
+def top_referers():
+    try:
+        # Read DataFrame from resources/LOGS.csv
+        csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
+        df = pd.read_csv(csv_path)
+
+        # Get top referer domains
+        result_df = get_top_referer_domains(df)
+        result = result_df.to_dict(orient="records")
+
+        return jsonify(result), 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
 if __name__ == '__main__':
     app.run(debug=True)
