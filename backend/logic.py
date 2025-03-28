@@ -119,3 +119,33 @@ def get_blocked_vs_allowed_traffic(df):
     traffic_summary.columns = ['Status', 'Count']
     
     return traffic_summary
+
+
+def detect_endpoint_scanning_by_404(df, threshold=10):
+    if 'status_code' not in df.columns or 'ip' not in df.columns:
+        raise ValueError("DataFrame must include 'status_code' and 'ip' columns")
+
+    # Filter 404 entries
+    df_404 = df[df['status_code'] == 404]
+
+    # Count 404s per IP
+    counts = df_404['ip'].value_counts()
+    flagged_ips = counts[counts >= threshold].reset_index()
+    flagged_ips.columns = ['IP', '404_Count']
+    
+    return flagged_ips
+
+#possible scraping or brute force?
+def detect_scraping_by_429(df, threshold=5):
+    if 'status_code' not in df.columns or 'ip' not in df.columns:
+        raise ValueError("DataFrame must include 'status_code' and 'ip' columns")
+
+    # Filter 429 entries
+    df_429 = df[df['status_code'] == 429]
+
+    # Count 429s per IP
+    counts = df_429['ip'].value_counts()
+    flagged_ips = counts[counts >= threshold].reset_index()
+    flagged_ips.columns = ['IP', '429_Count']
+    
+    return flagged_ips
