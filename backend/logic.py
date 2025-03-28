@@ -92,3 +92,30 @@ def check_domains(domains, api_key, delay=15):
         results.append(result)
         time.sleep(delay)  # VT API has rate limits for free users
     return pd.DataFrame(results)
+
+
+def classify_traffic(code):
+    try:
+        code = int(code)
+    except:
+        return 'Other'
+    
+    if code in [200, 302]:
+        return 'Allowed'
+    elif code in [401, 403]:
+        return 'Blocked'
+    elif code in [500, 502, 503, 504]:
+        return 'Server Error'
+    else:
+        return 'Other'
+
+def get_blocked_vs_allowed_traffic(df):
+    if 'status_code' not in df.columns:
+        raise ValueError("DataFrame must have a 'response_code' column")
+
+    df['traffic_status'] = df['status_code'].apply(classify_traffic)
+
+    traffic_summary = df['traffic_status'].value_counts().reset_index()
+    traffic_summary.columns = ['Status', 'Count']
+    
+    return traffic_summary
