@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import DynamicTable from '../components/DynamicTable';
-import FileUpload from '../components/FileUpload'; // 👈 your upload component
+import FileUpload from '../components/FileUpload';
 import { useAuth } from '@clerk/clerk-react';
 import { CircularProgress, Typography } from '@mui/material';
+import PieChartComponent from '../components/PieChart';
 
 const Dashboard = () => {
   const { getToken } = useAuth();
@@ -18,7 +19,12 @@ const Dashboard = () => {
     const urls = [
       'http://127.0.0.1:5000/top-referers',
       'http://127.0.0.1:5000/top-page-visits',
-      // Add other URLs here
+      'http://127.0.0.1:5000/check-domains',
+      'http://127.0.0.1:5000/request-status',         // ⬅️ Pie Chart
+      'http://127.0.0.1:5000/404-error-ips',
+      'http://127.0.0.1:5000/429-error-ips',
+      'http://127.0.0.1:5000/burstActivity',
+      'http://127.0.0.1:5000/get-data-exfiltration',
     ];
 
     const results: { columns: string[]; rows: any[][] }[] = [];
@@ -49,7 +55,7 @@ const Dashboard = () => {
     try {
       await axios.post('http://127.0.0.1:5000/upload', formData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -65,7 +71,10 @@ const Dashboard = () => {
     'Top Page Visits',
     'Malicious Domains',
     'Request Status',
-    // ...
+    '404 Error IPs',
+    '429 Error IPs',
+    'Burst Activity',
+    'Data Exfiltration Attempts',
   ];
 
   return (
@@ -79,14 +88,33 @@ const Dashboard = () => {
       ) : loading ? (
         <CircularProgress sx={{ mt: 4 }} />
       ) : (
-        dataSets.map((data, idx) => (
-          <DynamicTable
-            key={idx}
-            title={tableTitles[idx]}
-            columns={data.columns}
-            rows={data.rows}
-          />
-        ))
+        dataSets.map((data, idx) => {
+          // Render Pie Chart for Request Status (index 3)
+          if (idx === 3) {
+            const pieData = data.rows.map((row: any[]) => ({
+              name: row[0],
+              value: row[1],
+            }));
+
+            return (
+              <PieChartComponent
+                key={idx}
+                title={tableTitles[idx]}
+                data={pieData}
+              />
+            );
+          }
+
+          // Render table for all others
+          return (
+            <DynamicTable
+              key={idx}
+              title={tableTitles[idx]}
+              columns={data.columns}
+              rows={data.rows}
+            />
+          );
+        })
       )}
     </div>
   );
