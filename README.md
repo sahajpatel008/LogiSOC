@@ -28,7 +28,11 @@ A web application for SOC analysts
     ```sh
     VIRUS_TOTAL_KEY=#enter your virus  total key
     ```
-6. Running the flask server
+6. Navigate to the backend folder
+    ```sh
+    cd backend
+    ```
+7. Running the flask server
     ```sh
     python app.py
     ```
