@@ -6,9 +6,15 @@ import { useAuth } from '@clerk/clerk-react';
 import { CircularProgress, Typography } from '@mui/material';
 import PieChartComponent from '../components/PieChart';
 
+type DataSet = {
+  title: string;
+  columns?: string[];
+  rows?: any[][];
+};
+
 const Dashboard = () => {
   const { getToken } = useAuth();
-  const [dataSets, setDataSets] = useState<{ columns: string[]; rows: any[][] }[]>([]);
+  const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
 
@@ -17,17 +23,10 @@ const Dashboard = () => {
     const token = await getToken();
 
     const urls = [
-      'http://127.0.0.1:5000/top-referers',
-      'http://127.0.0.1:5000/top-page-visits',
       'http://127.0.0.1:5000/check-domains',
-      'http://127.0.0.1:5000/request-status',         // ⬅️ Pie Chart
-      'http://127.0.0.1:5000/404-error-ips',
-      'http://127.0.0.1:5000/429-error-ips',
-      'http://127.0.0.1:5000/burstActivity',
-      'http://127.0.0.1:5000/get-data-exfiltration',
     ];
 
-    const results: { columns: string[]; rows: any[][] }[] = [];
+    const results: DataSet[] = [];
 
     for (const url of urls) {
       try {
@@ -36,10 +35,18 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        results.push(res.data);
+
+        const data = res.data;
+
+        if (data && Array.isArray(data.columns) && Array.isArray(data.rows)) {
+          results.push(data);
+        } else {
+          console.warn(`Malformed response from ${url}:`, data);
+          results.push({ title: 'Malformed Data', columns: [], rows: [] });
+        }
       } catch (err) {
         console.error(`Error fetching ${url}:`, err);
-        results.push({ columns: [], rows: [] });
+        results.push({ title: 'Error', columns: [], rows: [] });
       }
     }
 
@@ -66,17 +73,6 @@ const Dashboard = () => {
     }
   };
 
-  const tableTitles = [
-    'Top Referers',
-    'Top Page Visits',
-    'Malicious Domains',
-    'Request Status',
-    '404 Error IPs',
-    '429 Error IPs',
-    'Burst Activity',
-    'Data Exfiltration Attempts',
-  ];
-
   return (
     <div className="space-y-10">
       <FileUpload onUpload={handleFileUpload} />
@@ -89,8 +85,7 @@ const Dashboard = () => {
         <CircularProgress sx={{ mt: 4 }} />
       ) : (
         dataSets.map((data, idx) => {
-          // Render Pie Chart for Request Status (index 3)
-          if (idx === 3) {
+          if (idx === 3 && data.rows) {
             const pieData = data.rows.map((row: any[]) => ({
               name: row[0],
               value: row[1],
@@ -99,21 +94,28 @@ const Dashboard = () => {
             return (
               <PieChartComponent
                 key={idx}
-                title={tableTitles[idx]}
+                title={data.title}
                 data={pieData}
               />
             );
           }
 
-          // Render table for all others
-          return (
-            <DynamicTable
-              key={idx}
-              title={tableTitles[idx]}
-              columns={data.columns}
-              rows={data.rows}
-            />
-          );
+          if (data.columns && data.rows) {
+            return (
+              <DynamicTable
+                key={idx}
+                title={data.title}
+                columns={data.columns}
+                rows={data.rows}
+              />
+            );
+          } else {
+            return (
+              <Typography key={idx} variant="body2" color="error">
+                Could not load table data for: {data.title || `Dataset ${idx + 1}`}
+              </Typography>
+            );
+          }
         })
       )}
     </div>
