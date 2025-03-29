@@ -27,6 +27,9 @@ A web application for SOC analysts
 5. Make .env file on the root level (same level .gitignore)
     ```sh
     VIRUS_TOTAL_KEY=#enter your virus  total key
+    CLERK_JWT_ISSUER= #enter from clerk API website, (project settings -> api )
+    CLERK_JWKS_URL= #enter from clerk API website
+    CLERK_AUDIENCE= #enter from clerk API website
     ```
 6. Navigate to the backend folder
     ```sh
