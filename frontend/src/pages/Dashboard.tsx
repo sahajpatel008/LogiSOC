@@ -23,7 +23,14 @@ const Dashboard = () => {
     const token = await getToken();
 
     const urls = [
-      'http://127.0.0.1:5000/check-domains',
+        'http://127.0.0.1:5000/top-referers',
+        'http://127.0.0.1:5000/top-page-visits',
+        'http://127.0.0.1:5000/check-domains',
+        'http://127.0.0.1:5000/request-status', // ⬅️ Pie Chart
+        'http://127.0.0.1:5000/404-error-ips',
+        'http://127.0.0.1:5000/429-error-ips',
+        'http://127.0.0.1:5000/burstActivity',
+        'http://127.0.0.1:5000/get-data-exfiltration',
     ];
 
     const results: DataSet[] = [];
