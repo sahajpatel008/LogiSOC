@@ -1,27 +1,37 @@
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Paper, Typography } from '@mui/material';
+import { PieChart, Pie, Cell, Tooltip as RechartTooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Paper, Typography, Box, IconButton, Tooltip } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 type Props = {
   title?: string;
   data: { name: string; value: number }[];
+  infoText?: string; // ⬅️ Optional tooltip prop
 };
 
 // 🎨 Exact status-to-color mapping
 const STATUS_COLORS: Record<string, string> = {
-  allowed: '#4caf50',       // Green
-  blocked: '#f44336',       // Red
-  'server error': '#ff9800', // Orange
-  other: '#90a4ae',         // Gray/Blue
+  allowed: '#4caf50',
+  blocked: '#f44336',
+  'server error': '#ff9800',
+  other: '#90a4ae',
 };
 
 const fallbackColor = '#bdbdbd';
 
-const PieChartComponent: React.FC<Props> = ({ title = "Traffic Classification", data }) => {
+const PieChartComponent: React.FC<Props> = ({ title = "Traffic Classification", data, infoText }) => {
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        {title}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+        <Typography variant="h6">{title}</Typography>
+        {infoText && (
+          <Tooltip title={infoText} arrow>
+            <IconButton size="small" sx={{ padding: 0 }}>
+              <InfoOutlinedIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
+
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
@@ -38,7 +48,7 @@ const PieChartComponent: React.FC<Props> = ({ title = "Traffic Classification", 
               return <Cell key={`cell-${index}`} fill={color} />;
             })}
           </Pie>
-          <Tooltip />
+          <RechartTooltip />
           <Legend />
         </PieChart>
       </ResponsiveContainer>

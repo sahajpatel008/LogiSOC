@@ -146,6 +146,7 @@ const Dashboard = () => {
                     name: row[0],
                     value: row[1],
                   }))}
+                  infoText={dataSets[3].infoText}
                 />
               </Box>
             )}
