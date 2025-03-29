@@ -64,6 +64,7 @@ def top_referers():
 
         # Convert result to dict with columns and rows
         result = {
+            "title": "Top Referer domains",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -88,6 +89,7 @@ def top_page_visits():
 
         # Convert to dict with columns and rows
         result = {
+            "title": "Top page visits",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -112,9 +114,11 @@ def malicious_domain_check():
         resources_path.mkdir(exist_ok=True)  # create resources/ if it doesn't exist
 
         output_csv_path = resources_path / "3_maliciousDomainsCheck.csv"
+        results = results.fillna("N/A")
         results.to_csv(output_csv_path, index=False)
         
         result = {
+            "title": "Malicios domains Check",
             "columns": list(results.columns),
             "rows": results.values.tolist()
         }
@@ -143,6 +147,7 @@ def get_status_codes_pie_chart():
         output_csv_path = resources_path / "4_blocked_unblocked_analysis.csv"
         result_df.to_csv(output_csv_path, index=False)
         result = {
+            "title": "Traffic requests distribution",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -171,6 +176,7 @@ def get_404_error_IPs():
         output_csv_path = resources_path / "5_endpointScanningDomains.csv"
         result_df.to_csv(output_csv_path, index=False)
         result = {
+            "title": "Frequent 404 Error IPs",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -200,6 +206,7 @@ def get_429_error_IPs():
         output_csv_path = resources_path / "5_flaggedScrappingDomains.csv"
         result_df.to_csv(output_csv_path, index=False)
         result = {
+            "title": "Frequent 429 error IPs",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -233,6 +240,7 @@ def get_burstActivity():
         output_csv_path = resources_path / "6_burst_activity.csv"
         result_df.to_csv(output_csv_path, index=False)
         result = {
+            "title": "Burst Activity",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -262,6 +270,7 @@ def get_exfiltration_attempts():
         output_csv_path = resources_path / "7_dataExfiltrationIPs.csv"
         result_df.to_csv(output_csv_path, index=False)
         result = {
+            "title":"Suspected data exfiltration attempts",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
