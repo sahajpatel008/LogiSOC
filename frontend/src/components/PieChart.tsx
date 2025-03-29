@@ -1,21 +1,26 @@
-// src/components/PieChartComponent.jsx
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Paper, Typography } from '@mui/material';
 
-const data = [
-  { name: 'Blocked', value: 400 },
-  { name: 'Allowed', value: 300 },
-  { name: 'Suspicious', value: 300 },
-  { name: 'Unknown', value: 200 },
-];
+type Props = {
+  title?: string;
+  data: { name: string; value: number }[];
+};
 
-const COLORS = ['#e57373', '#81c784', '#ffd54f', '#64b5f6'];
+// 🎨 Exact status-to-color mapping
+const STATUS_COLORS: Record<string, string> = {
+  allowed: '#4caf50',       // Green
+  blocked: '#f44336',       // Red
+  'server error': '#ff9800', // Orange
+  other: '#90a4ae',         // Gray/Blue
+};
 
-const PieChartComponent = () => {
+const fallbackColor = '#bdbdbd';
+
+const PieChartComponent: React.FC<Props> = ({ title = "Traffic Classification", data }) => {
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
       <Typography variant="h6" gutterBottom>
-        Traffic Classification
+        {title}
       </Typography>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
@@ -24,13 +29,14 @@ const PieChartComponent = () => {
             cx="50%"
             cy="50%"
             outerRadius={100}
-            fill="#8884d8"
             dataKey="value"
             label
           >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
+            {data.map((entry, index) => {
+              const name = entry.name.toLowerCase();
+              const color = STATUS_COLORS[name] || fallbackColor;
+              return <Cell key={`cell-${index}`} fill={color} />;
+            })}
           </Pie>
           <Tooltip />
           <Legend />
