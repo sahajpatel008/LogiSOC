@@ -65,7 +65,7 @@ def top_referers():
         # Convert result to dict with columns and rows
         result = {
             "title": "Top Referer domains",
-            "infoText": "Domains where traffic originated from",
+            "infoText": "Displays the most common external domains that directed users to your website. This can help identify unexpected traffic sources, detect potential phishing campaigns, malicious redirections, or referral-based attacks. Analysts can use this to spot anomalies or validate the legitimacy of inbound traffic.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -91,7 +91,7 @@ def top_page_visits():
         # Convert to dict with columns and rows
         result = {
             "title": "Top page visits",
-            "infoText": "Top 10 most accessed resources of website",
+            "infoText": "Shows the most requested internal pages. Helps detect unusual activity, high-interest endpoints, or potential scanning behavior.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -121,7 +121,7 @@ def malicious_domain_check():
         
         result = {
             "title": "Malicious domains Check",
-            "infoText": "Checks maliciousness of suspected domains with VirusTotal",
+            "infoText": " VirusTotal scan summary to flag suspicious or malicious referrers.",
             "columns": list(results.columns),
             "rows": results.values.tolist()
         }
@@ -151,7 +151,7 @@ def get_status_codes_pie_chart():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Traffic requests distribution",
-            "infoText": "Amount of HTTP response codes helps in checking for brute force attempts etc",
+            "infoText": " Categorizes requests as Allowed, Blocked, or Server Errors based on response codes. Helps identify access issues or abnormal traffic patterns.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -181,7 +181,7 @@ def get_404_error_IPs():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Frequent 404 Error IPs",
-            "infoText": "Directly associated with endpoint scanning attempts",
+            "infoText": "Flags IPs with excessive 404 errors, which may indicate scanning for non-existent or restricted endpoints.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -212,7 +212,7 @@ def get_429_error_IPs():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Frequent 429 error IPs",
-            "infoText": "associated with brute force attacks and ddos attacks",
+            "infoText": " Identifies IPs repeatedly hitting rate limits — possible scraping or brute-force.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -247,7 +247,7 @@ def get_burstActivity():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Burst Activity",
-            "infoText": "Helps find brute force attempts",
+            "infoText": "Flags IPs with rapid 404/429 responses in a short time, suggesting scanning, scraping, or brute-force behavior.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -278,7 +278,7 @@ def get_exfiltration_attempts():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title":"Suspected data exfiltration attempts",
-            "infoText": "-",
+            "infoText": " Flags large POST/PUT requests to unknown domains, which may indicate unauthorized data transfers.",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
