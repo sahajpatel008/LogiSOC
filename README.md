@@ -1,6 +1,9 @@
 # LogiSOC
 A web application for SOC analysts
 
+## Logs Dataset
+I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs](https://www.secrepo.com/self.logs/). Any of the web access logs can be used for analysis. Some of them are stored in `log_samples/`.
+
 ## Anomaly Detection
 1. **Top domain referrers**: 
     - This function processes the referrer column in the data to find which external websites most frequently directed users to the site. It filters for valid HTTP URLs, extracts just the domain part, counts how often each domain appears, and returns the top N most common ones. 
