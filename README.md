@@ -10,22 +10,25 @@ A web application for SOC analysts
     ```sh
         git clone https://github.com/sahajpatel008/LogiSOC.git
     ```
-
-2. Create a virtual environment and activate it:
+2. Navigate to the frontend folder
+    ```sh
+    cd LogiSOC
+    ```
+3. Create a virtual environment and activate it:
     ```sh
     python -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
     ```
 
-3. Install dependencies:
+4. Install dependencies:
     ```sh
     pip install -r requirements.txt
     ```
-4. Make .env file on the root level (same level .gitignore)
+5. Make .env file on the root level (same level .gitignore)
     ```sh
     VIRUS_TOTAL_KEY=#enter your virus  total key
     ```
-5. Running the flask server
+6. Running the flask server
     ```sh
     python app.py
     ```
