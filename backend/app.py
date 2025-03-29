@@ -140,12 +140,16 @@ def get_status_codes_pie_chart():
 
         output_csv_path = resources_path / "4_blocked_unblocked_analysis.csv"
         result_df.to_csv(output_csv_path, index=False)
-        result = result_df.to_dict(orient="records")
-        
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
     
 @app.route('/404-error-ips', methods=['GET'])
