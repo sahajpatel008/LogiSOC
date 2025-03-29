@@ -50,19 +50,27 @@ def top_referers():
 
         # Get top referer domains
         result_df = get_top_referer_domains(df)
+
         # Dynamically get path to resources folder
         resources_path = Path(__file__).resolve().parent / "resources"
         resources_path.mkdir(exist_ok=True)  # create resources/ if it doesn't exist
 
+        # Save result to CSV
         output_csv_path = resources_path / "2_topDomainReferers.csv"
         result_df.to_csv(output_csv_path, index=False)
-        result = result_df.to_dict(orient="records")
-        
+
+        # Convert result to dict with columns and rows
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
+
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
     
 @app.route('/top-page-visits', methods=['GET'])
 def top_page_visits():
@@ -73,15 +81,21 @@ def top_page_visits():
 
         # Get top referer domains
         result_df = get_top_requested_pages(df)
-        result = result_df.to_dict(orient="records")
+
+        # Convert to dict with columns and rows
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
 
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
     
-@app.route('/check-domains', methods=['POST'])
+@app.route('/check-domains', methods=['GET'])
 def malicious_domain_check():
     try:
         # Read DataFrame from resources/LOGS.csv
