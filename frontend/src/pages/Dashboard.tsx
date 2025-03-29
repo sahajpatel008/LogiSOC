@@ -33,19 +33,20 @@ const Dashboard = () => {
   const [showUploadBox, setShowUploadBox] = useState(true);
 
   const fetchAllTablesInOrder = async () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
     setLoading(true);
     const token = await getToken();
 
     const urls = [
-      'http://127.0.0.1:5000/top-referers',
-      'http://127.0.0.1:5000/top-page-visits',
-      'http://127.0.0.1:5000/check-domains',
-      'http://127.0.0.1:5000/request-status',
-      'http://127.0.0.1:5000/404-error-ips',
-      'http://127.0.0.1:5000/429-error-ips',
-      'http://127.0.0.1:5000/burstActivity',
-      'http://127.0.0.1:5000/get-data-exfiltration',
-      'http://127.0.0.1:5000/activity-timeline',
+      `${BASE_URL}/top-referers`,
+      `${BASE_URL}/top-page-visits`,
+      `${BASE_URL}/check-domains`,
+      `${BASE_URL}/request-status`,
+      `${BASE_URL}/404-error-ips`,
+      `${BASE_URL}/429-error-ips`,
+      `${BASE_URL}/burstActivity`,
+      `${BASE_URL}/get-data-exfiltration`,
+      `${BASE_URL}/activity-timeline`,
     ];
 
     const results: DataSet[] = [];
