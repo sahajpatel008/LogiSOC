@@ -14,7 +14,7 @@ function App() {
       <Navbar />
 
       <SignedIn>
-        <Box sx={{ pt: 10 }}>
+        <Box sx={{ pt: 2 }}>
           <Dashboard />
         </Box>
       </SignedIn>

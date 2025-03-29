@@ -28,7 +28,7 @@ const PieChartComponent: React.FC<Props> = ({ title = "Traffic Classification", 
             data={data}
             cx="50%"
             cy="50%"
-            outerRadius={100}
+            outerRadius={70}
             dataKey="value"
             label
           >
