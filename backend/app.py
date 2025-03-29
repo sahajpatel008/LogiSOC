@@ -10,6 +10,7 @@ from logic import convert_to_df, get_top_referer_domains, get_top_requested_page
 from dotenv import load_dotenv
 import pandas as pd
 import traceback
+from auth import verify_clerk_token
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
 
@@ -25,6 +26,7 @@ def hello():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    verify_clerk_token()
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
 
@@ -43,6 +45,7 @@ def upload_file():
 
 @app.route('/top-referers', methods=['GET'])
 def top_referers():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
@@ -74,6 +77,7 @@ def top_referers():
     
 @app.route('/top-page-visits', methods=['GET'])
 def top_page_visits():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
