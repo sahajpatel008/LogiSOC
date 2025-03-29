@@ -1,7 +1,36 @@
 # LogiSOC
 A web application for SOC analysts
 
+## Anomaly Detection
+1. **Top domain referrers**: 
+    - This function processes the referrer column in the data to find which external websites most frequently directed users to the site. It filters for valid HTTP URLs, extracts just the domain part, counts how often each domain appears, and returns the top N most common ones. 
+    - Unusual or sudden changes in top referrer domains can indicate suspicious activity, like bots or malicious redirections.
+2. **Top requested pages**:  
+    - This function finds the most frequently accessed pages on the site by counting how often each request_path appears in the data. It returns the top N pages based on request count.
+    - A sudden spike in requests to uncommon or sensitive pages may signal probing, attacks, or unauthorized access attempts
+3. **Malicious Domains**:
+    - Check the domains of top referrers from 1. 
+    - Queries the VirusTotal API to check if a given domain has been flagged as malicious, suspicious, or safe. It returns a summary of the latest analysis statistics for that domain.
+4. **Traffic proportion**:
+    - Classifies HTTP response codes into categories like Allowed, Blocked, Server Error, or Other, then summarizes the count of each type to give an overview of traffic behavior.
+    - A sudden rise in Blocked or Server Error responses can indicate access attempts to restricted resources, misconfigurations, or potential attacks like brute-force or DDoS.
 
+5. **Detection of endpoint scanners via 404s**:
+    - Identifies IP addresses that triggered a high number of 404 (Not Found) errors, which often indicates scanning for non-existent or sensitive endpoints.
+    -  Multiple 404 responses from the same IP may signal reconnaissance or probing activity, potentially preceding an attack.
+
+6. **Detection of Scarping or Brute force vis 429s**
+    - Flags IP addresses that receive too many 429 (Too Many Requests) errors, which often indicates automated activity like scraping or brute-force attacks.
+    - Frequent 429 responses from the same IP suggest abnormal request patterns, helping identify bots or attackers overloading the server.
+7. **Detection of Burst Activity**
+    - Detects IPs that trigger multiple identical response codes (like 404 or 429) within a short time window, indicating sudden spikes in activity.
+    -  Rapid bursts of errors from the same IP may suggest automated scanning, scraping, or attack attempts in a short span of time.
+8. **Detection of Data Exfiltration Attempts**
+    -  Analyze logs to flag IPs making unusually large POST/PUT requests to unknown domains — a common sign of potential data exfiltration. It reads the logs, filters suspicious entries, and returns the findings in a structured format. 
+    -  Large outbound data transfers to unfamiliar domains may indicate unauthorized data leakage or compromised systems attempting to exfiltrate sensitive information.
+9. **Activity Timeline**
+    - This function creates a 2-hour interval timeline of request volume by grouping log timestamps. It helps visualize traffic trends over time.
+    - Sudden spikes or drops in activity can reveal unusual behavior, such as bursts of automated traffic, downtime, or potential attacks.
 ## Deploying locally
 ---
 
