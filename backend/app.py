@@ -255,8 +255,8 @@ def get_summary():
         resources_path = Path(__file__).resolve().parent / "resources"
         resources_path.mkdir(exist_ok=True)  # create resources/ if it doesn't exist
 
-        output_csv_path = resources_path / "8_soc_learnings.json"
-        with open("8_soc_learnings.json", "w") as f:
+        output_json_path = resources_path / "8_soc_learnings.json"
+        with open(output_json_path, "w") as f:
             json.dump(soc_learnings, f, indent=4)
         
         return jsonify(soc_learnings), 200
