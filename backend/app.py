@@ -5,7 +5,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from logic import convert_to_df, get_top_referer_domains, get_top_requested_pages, \
     check_domains, get_blocked_vs_allowed_traffic, detect_endpoint_scanning_by_404, \
-    detect_scraping_by_429
+    detect_scraping_by_429, detect_burst_activity
 from dotenv import load_dotenv
 import pandas as pd
 import traceback
@@ -170,5 +170,34 @@ def get_429_error_IPs():
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
+@app.route('/burstActivity', methods=['GET'])
+def get_burstActivity():
+    try:
+        # Read DataFrame from resources/LOGS.csv
+        csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
+        df = pd.read_csv(csv_path)
+
+        # Get top referer domains
+        burst_404_df = detect_burst_activity(df, 404, 5)
+        burst_429_df = detect_burst_activity(df, 429, 5)
+
+        result_df = pd.concat([burst_404_df, burst_429_df], ignore_index=True)
+
+        # Dynamically get path to resources folder
+        resources_path = Path(__file__).resolve().parent / "resources"
+        resources_path.mkdir(exist_ok=True)  # create resources/ if it doesn't exist
+
+        output_csv_path = resources_path / "6_burst_activity.csv"
+        result_df.to_csv(output_csv_path, index=False)
+        result = result_df.to_dict(orient="records")
+        
+        return jsonify(result), 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -149,3 +149,30 @@ def detect_scraping_by_429(df, threshold=5):
     flagged_ips.columns = ['IP', '429_Count']
     
     return flagged_ips
+
+
+def detect_burst_activity(df, response_code=404, threshold=5, window_minutes=1):
+    if 'status_code' not in df.columns or 'ip' not in df.columns or 'timestamp' not in df.columns:
+        raise ValueError("DataFrame must include 'status_code', 'ip', and 'timestamp' columns")
+
+    # Ensure timestamp is in datetime format
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+    # Filter for target response code (e.g., 404 or 429)
+    df_filtered = df[df['status_code'] == response_code]
+
+    # Sort by IP and timestamp
+    df_filtered = df_filtered.sort_values(by=['ip', 'timestamp'])
+
+    flagged_ips = set()
+
+    # Group by IP and slide through timestamps
+    for ip, group in df_filtered.groupby('ip'):
+        times = group['timestamp'].tolist()
+        for i in range(len(times) - threshold + 1):
+            time_diff = (times[i + threshold - 1] - times[i]).total_seconds() / 60.0
+            if time_diff <= window_minutes:
+                flagged_ips.add(ip)
+                break  # Once flagged, no need to keep checking that IP
+
+    return pd.DataFrame({'IP': list(flagged_ips), 'Reason': [f'Burst {response_code} activity'] * len(flagged_ips)})
