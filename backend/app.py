@@ -282,9 +282,35 @@ def get_exfiltration_attempts():
         traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
     
-
 def getPath(fileName):
     return Path(__file__).resolve().parent / "resources" / str(fileName)
+
+@app.route('/activity-timeline')
+def activity_timeline():
+    verify_clerk_token()
+    try:
+        df = pd.read_csv(getPath('LOGS.csv'))
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+        # Group by hour
+        timeline = df.set_index('timestamp').resample('2H').size()
+
+        # Convert to JSON-friendly format
+        timeline_data = [
+            {"time": time.strftime("%H:00"), "count": int(count)}
+            for time, count in timeline.items()
+        ]
+
+        return jsonify({
+            "title": "Activity Timeline",
+            "data": timeline_data
+        }), 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 @app.route('/get-summary', methods=['GET'])
 def get_summary():

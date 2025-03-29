@@ -5,11 +5,13 @@ import FileUpload from '../components/FileUpload';
 import { useAuth } from '@clerk/clerk-react';
 import { CircularProgress, Typography } from '@mui/material';
 import PieChartComponent from '../components/PieChart';
+import TimeLineGraph from '../components/TimeLineGraph';
 
 type DataSet = {
   title: string;
   columns?: string[];
   rows?: any[][];
+  data?: { time: string; count: number }[];
 };
 
 const Dashboard = () => {
@@ -31,6 +33,7 @@ const Dashboard = () => {
         'http://127.0.0.1:5000/429-error-ips',
         'http://127.0.0.1:5000/burstActivity',
         'http://127.0.0.1:5000/get-data-exfiltration',
+        'http://127.0.0.1:5000/activity-timeline'
     ];
 
     const results: DataSet[] = [];
@@ -47,7 +50,12 @@ const Dashboard = () => {
 
         if (data && Array.isArray(data.columns) && Array.isArray(data.rows)) {
           results.push(data);
-        } else {
+        } 
+        // Handle chart/graph data
+        else if (data && Array.isArray(data.data)) {
+          results.push(data);
+        } 
+        else {
           console.warn(`Malformed response from ${url}:`, data);
           results.push({ title: 'Malformed Data', columns: [], rows: [] });
         }
@@ -106,6 +114,17 @@ const Dashboard = () => {
               />
             );
           }
+
+          // Line chart
+            if (idx === 8 && 'data' in data && Array.isArray(data.data)) {
+                return (
+                <TimeLineGraph
+                    key={idx}
+                    title={data.title}
+                    data={data.data}
+                />
+                );
+            }
 
           if (data.columns && data.rows) {
             return (
