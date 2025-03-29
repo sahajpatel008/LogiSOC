@@ -2,11 +2,14 @@
 import requests
 from jose import jwt
 from flask import request, abort
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
-CLERK_JWT_ISSUER = "https://infinite-pig-43.clerk.accounts.dev"
-CLERK_JWKS_URL = "https://infinite-pig-43.clerk.accounts.dev/.well-known/jwks.json"
-CLERK_AUDIENCE = "https://infinite-pig-43.clerk.accounts.dev"  # Example: 'clerk.website.com' or from your Clerk dashboard
+CLERK_JWT_ISSUER = os.getenv("CLERK_JWT_ISSUER")
+CLERK_JWKS_URL = os.getenv("CLERK_JWKS_URL")
+CLERK_AUDIENCE = os.getenv("CLERK_AUDIENCE")  # Example: 'clerk.website.com' or from your Clerk dashboard
 
 # jwks = requests.get(CLERK_JWKS_URL).json()
 response = requests.get(CLERK_JWKS_URL)
