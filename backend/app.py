@@ -113,7 +113,11 @@ def malicious_domain_check():
         output_csv_path = resources_path / "3_maliciousDomainsCheck.csv"
         results.to_csv(output_csv_path, index=False)
         
-        return jsonify(results.to_dict(orient="records")), 200
+        result = {
+            "columns": list(results.columns),
+            "rows": results.values.tolist()
+        }
+        return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
