@@ -8,7 +8,7 @@ A web application for SOC analysts
 ### Backend
 1. Clone the repository and navigate to the backend folder:
     ```sh
-        https://github.com/sahajpatel008/LogiSOC.git
+        git clone https://github.com/sahajpatel008/LogiSOC.git
     ```
 
 2. Create a virtual environment and activate it:
