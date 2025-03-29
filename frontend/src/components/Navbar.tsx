@@ -10,10 +10,10 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="primary">
+      <AppBar position="fixed" color="primary" elevation={2}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            SOC Log Parser
+            LogiSOC
           </Typography>
           <Button color="inherit" component={Link} to="/login">Login</Button>
           <Button color="inherit" component={Link} to="/signup">Signup</Button>

@@ -5,7 +5,7 @@ import CustomTable from './components/Table.tsx';
 import Dashboard from './pages/Dashboard.tsx'
 import './App.css';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-
+import Box from '@mui/material/Box';
 
 function App() {
 
@@ -17,13 +17,15 @@ function App() {
         </SignedOut>
         <SignedIn>
           <UserButton />
-          <Dashboard></Dashboard>
+          <Box sx={{ pt: 10 }}> {/* add padding to push content below the navbar */}
+            <Dashboard />
+          </Box>
         </SignedIn>
       </header>
       <Navbar />
       {/* <PieChartComponent></PieChartComponent>
       <CustomTable></CustomTable> */}
-      
+
     </>
   )
 }
