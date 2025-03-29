@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import re
 from pathlib import Path
@@ -176,3 +177,40 @@ def detect_burst_activity(df, response_code=404, threshold=5, window_minutes=1):
                 break  # Once flagged, no need to keep checking that IP
 
     return pd.DataFrame({'IP': list(flagged_ips), 'Reason': [f'Burst {response_code} activity'] * len(flagged_ips)})
+
+
+KNOWN_DOMAINS = [
+    # "yourcompany.com",
+    # "internal.service.net",
+    # "api.yourapp.local"
+]
+
+def extract_domain(url):
+    try:
+        return urlparse(url).netloc.lower()
+    except:
+        return ""
+
+def is_unknown_domain(domain, known_domains):
+    return all(known not in domain for known in known_domains)
+
+def detect_data_exfiltration(df, size_threshold=1_000_000, known_domains=KNOWN_DOMAINS):
+    if 'size' not in df.columns or 'method' not in df.columns:
+        raise ValueError("DataFrame must include 'response_size' and 'method' columns")
+    
+    # Optional: extract destination domain if available
+    if 'request_path' in df.columns:
+        df['destination_domain'] = df['request_path'].dropna().apply(extract_domain)
+    elif 'referrer' in df.columns:
+        df['destination_domain'] = df['referrer'].dropna().apply(extract_domain)
+    else:
+        df['destination_domain'] = ""
+
+    # Filter by criteria
+    df_suspect = df[
+        (df['method'].str.upper().isin(['POST', 'PUT'])) &
+        (df['size'] > size_threshold) &
+        (df['destination_domain'].apply(lambda d: is_unknown_domain(d, known_domains)))
+    ]
+    
+    return df_suspect[['ip', 'timestamp', 'method', 'request_path', 'size', 'destination_domain']]
