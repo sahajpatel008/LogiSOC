@@ -21,7 +21,9 @@ type DataSet = {
   columns?: string[];
   rows?: any[][];
   data?: { time: string; count: number }[];
+  infoText?: string; // ⬅️ add this
 };
+
 
 const Dashboard = () => {
   const { getToken } = useAuth();
@@ -190,6 +192,7 @@ const Dashboard = () => {
                       title={data.title}
                       columns={data.columns || []}
                       rows={data.rows || []}
+                      infoText={data.infoText}
                     />
                   </Box>
                 </Grid>
@@ -232,6 +235,7 @@ const Dashboard = () => {
                         title={data.title}
                         columns={data.columns || []}
                         rows={data.rows || []}
+                        infoText={data.infoText}
                       />
                     </Box>
                   </Grid>
@@ -256,6 +260,7 @@ const Dashboard = () => {
                     title={data.title}
                     columns={data.columns}
                     rows={data.rows}
+                    infoText={data.infoText}
                   />
                 );
               } else {

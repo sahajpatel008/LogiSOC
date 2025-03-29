@@ -65,6 +65,7 @@ def top_referers():
         # Convert result to dict with columns and rows
         result = {
             "title": "Top Referer domains",
+            "infoText": "Domains where traffic originated from",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -90,6 +91,7 @@ def top_page_visits():
         # Convert to dict with columns and rows
         result = {
             "title": "Top page visits",
+            "infoText": "Top 10 most accessed resources of website",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -118,7 +120,8 @@ def malicious_domain_check():
         results.to_csv(output_csv_path, index=False)
         
         result = {
-            "title": "Malicios domains Check",
+            "title": "Malicious domains Check",
+            "infoText": "Checks maliciousness of suspected domains with VirusTotal",
             "columns": list(results.columns),
             "rows": results.values.tolist()
         }
@@ -148,6 +151,7 @@ def get_status_codes_pie_chart():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Traffic requests distribution",
+            "infoText": "Amount of HTTP response codes helps in checking for brute force attempts etc",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -177,6 +181,7 @@ def get_404_error_IPs():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Frequent 404 Error IPs",
+            "infoText": "Directly associated with endpoint scanning attempts",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -207,6 +212,7 @@ def get_429_error_IPs():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Frequent 429 error IPs",
+            "infoText": "associated with brute force attacks and ddos attacks",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -241,6 +247,7 @@ def get_burstActivity():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title": "Burst Activity",
+            "infoText": "Helps find brute force attempts",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
@@ -271,6 +278,7 @@ def get_exfiltration_attempts():
         result_df.to_csv(output_csv_path, index=False)
         result = {
             "title":"Suspected data exfiltration attempts",
+            "infoText": "-",
             "columns": list(result_df.columns),
             "rows": result_df.values.tolist()
         }
