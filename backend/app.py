@@ -101,6 +101,7 @@ def top_page_visits():
     
 @app.route('/check-domains', methods=['GET'])
 def malicious_domain_check():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "2_topDomainReferers.csv"
@@ -127,6 +128,7 @@ def malicious_domain_check():
 
 @app.route('/request-status', methods=['GET'])
 def get_status_codes_pie_chart():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
@@ -154,6 +156,7 @@ def get_status_codes_pie_chart():
     
 @app.route('/404-error-ips', methods=['GET'])
 def get_404_error_IPs():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
@@ -167,16 +170,22 @@ def get_404_error_IPs():
 
         output_csv_path = resources_path / "5_endpointScanningDomains.csv"
         result_df.to_csv(output_csv_path, index=False)
-        result = result_df.to_dict(orient="records")
-        
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
 
 @app.route('/429-error-ips', methods=['GET'])
 def get_429_error_IPs():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
@@ -190,16 +199,22 @@ def get_429_error_IPs():
 
         output_csv_path = resources_path / "5_flaggedScrappingDomains.csv"
         result_df.to_csv(output_csv_path, index=False)
-        result = result_df.to_dict(orient="records")
-        
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
     
 @app.route('/burstActivity', methods=['GET'])
 def get_burstActivity():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
@@ -217,16 +232,22 @@ def get_burstActivity():
 
         output_csv_path = resources_path / "6_burst_activity.csv"
         result_df.to_csv(output_csv_path, index=False)
-        result = result_df.to_dict(orient="records")
-        
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
     
 @app.route('/get-data-exfiltration', methods=['GET'])
 def get_exfiltration_attempts():
+    verify_clerk_token()
     try:
         # Read DataFrame from resources/LOGS.csv
         csv_path = Path(__file__).resolve().parent / "resources" / "LOGS.csv"
@@ -240,13 +261,18 @@ def get_exfiltration_attempts():
 
         output_csv_path = resources_path / "7_dataExfiltrationIPs.csv"
         result_df.to_csv(output_csv_path, index=False)
-        result = result_df.to_dict(orient="records")
-        
+        result = {
+            "columns": list(result_df.columns),
+            "rows": result_df.values.tolist()
+        }
         return jsonify(result), 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        print("Error: ", e)
+        traceback.print_exc()
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
 
 def getPath(fileName):
     return Path(__file__).resolve().parent / "resources" / str(fileName)
