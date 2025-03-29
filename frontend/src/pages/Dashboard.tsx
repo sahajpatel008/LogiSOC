@@ -161,6 +161,7 @@ const Dashboard = () => {
                 <TimeLineGraph
                   title={dataSets[8].title}
                   data={dataSets[8].data}
+                  infoText={dataSets[8].infoText}
                 />
               </Box>
             )}

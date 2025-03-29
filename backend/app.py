@@ -311,6 +311,7 @@ def activity_timeline():
 
         return jsonify({
             "title": "Activity Timeline",
+            "infoText": "Shows the volume of requests grouped by 2-hour intervals to help identify activity spikes or quiet periods.",
             "data": timeline_data
         }), 200
     except ValueError as ve:
