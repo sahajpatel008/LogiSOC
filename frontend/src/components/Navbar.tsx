@@ -5,18 +5,32 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import { Link } from 'react-router-dom';
 
+
+
 const Navbar = () => {
+  const { user } = useUser();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" color="primary" elevation={2}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Typography variant="h6" component={Link} to="/" sx={{ color: 'inherit', textDecoration: 'none' }}>
             LogiSOC
           </Typography>
-          <Button color="inherit" component={Link} to="/login">Login</Button>
-          <Button color="inherit" component={Link} to="/signup">Signup</Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <SignedOut>
+              <SignInButton mode="modal" />
+            </SignedOut>
+            <SignedIn>
+              <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'block' } }}>
+                {user?.fullName || user?.username || 'User'}
+              </Typography>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>

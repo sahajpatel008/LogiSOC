@@ -11,20 +11,13 @@ function App() {
 
   return (
     <>
-      <header>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-          <Box sx={{ pt: 10 }}> {/* add padding to push content below the navbar */}
-            <Dashboard />
-          </Box>
-        </SignedIn>
-      </header>
       <Navbar />
-      {/* <PieChartComponent></PieChartComponent>
-      <CustomTable></CustomTable> */}
+
+      <SignedIn>
+        <Box sx={{ pt: 10 }}>
+          <Dashboard />
+        </Box>
+      </SignedIn>
 
     </>
   )
