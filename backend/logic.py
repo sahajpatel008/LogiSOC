@@ -83,7 +83,13 @@ def check_domain_virustotal(domain, api_key):
             'undetected': stats.get('undetected', 0),
         }
     else:
-        return {'domain': domain, 'error': response.status_code, "response": response.text}
+        return {
+            'domain': domain,
+            'harmless': '-',
+            'malicious': '-',
+            'suspicious': '-',
+            'undetected': '-',
+        }
 
 
 def check_domains(domains, api_key, delay=15):
