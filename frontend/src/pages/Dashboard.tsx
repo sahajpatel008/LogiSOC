@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import DynamicTable from '../components/DynamicTable';
 import FileUpload from '../components/FileUpload';
