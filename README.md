@@ -14,13 +14,18 @@ A web application for SOC analysts
   - [Detection of Burst Activity](#detection-of-burst-activity)  
   - [Detection of Data Exfiltration Attempts](#detection-of-data-exfiltration-attempts)  
   - [Activity Timeline](#activity-timeline)  
-- [Deploy with Docker](#deploying-locally-with-docker)
+- [Run with Docker](#run-with-docker)
 - [Deploying locally](#deploying-locally)  
   - [Backend](#backend)  
   - [Frontend](#frontend)
 
 ## Logs Dataset
 I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs](https://www.secrepo.com/self.logs/). Any of the web access logs can be used for analysis. Some of them are stored in `log_samples/`.
+
+> ⚠️ **IMPORTANT:**  
+> **BEFORE YOU DO ANALYSIS: PLEASE CHANGE THE EXTENSION OF THESE FILES TO `.log` IF NOT ALREADY.**  
+> This step is required for the analysis to work correctly.
+> `log_samples/` already has files with .log extension. 
 
 ## Anomaly Detection
 1. ### Top domain referrers
@@ -54,7 +59,7 @@ I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs
     - This function creates a 2-hour interval timeline of request volume by grouping log timestamps. It helps visualize traffic trends over time.
     - Sudden spikes or drops in activity can reveal unusual behavior, such as bursts of automated traffic, downtime, or potential attacks.
 
-## Deploying locally with Docker
+## Run with Docker
 ---
 This app consists of a React (Vite) frontend and a Flask backend, orchestrated with Docker Compose.
 1. Open cmd, be at the root level
@@ -93,9 +98,9 @@ This app consists of a React (Vite) frontend and a Flask backend, orchestrated w
 
 4. Install dependencies:
     ```sh
-    pip install -r requirements.txt
+    pip install -r backend/requirements.txt
     ```
-5. Make .env file on the root level (same level .gitignore)
+5. Make backend/.env file
     ```sh
     VIRUS_TOTAL_KEY=#enter your virus  total key
     CLERK_JWT_ISSUER= #enter from clerk API website, (project settings -> api )
