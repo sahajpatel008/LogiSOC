@@ -3,6 +3,7 @@ A web application for SOC analysts
 
 ### Table of Contents
 
+- [Live Demo](#demo)
 - [Logs Dataset](#logs-dataset)  
 - [Anomaly Detection](#anomaly-detection)  
   - [Top domain referrers](#top-domain-referrers)  
@@ -18,6 +19,10 @@ A web application for SOC analysts
 - [Deploying locally](#deploying-locally)  
   - [Backend](#backend)  
   - [Frontend](#frontend)
+
+## Demo
+Live at:  https://logisoc-frontend.fly.dev/ 
+For log files see [Logs Dataset](#logs-dataset) 
 
 ## Logs Dataset
 I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs](https://www.secrepo.com/self.logs/). Any of the web access logs can be used for analysis. Some of them are stored in `log_samples/`.
