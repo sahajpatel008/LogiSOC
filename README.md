@@ -14,6 +14,7 @@ A web application for SOC analysts
   - [Detection of Burst Activity](#detection-of-burst-activity)  
   - [Detection of Data Exfiltration Attempts](#detection-of-data-exfiltration-attempts)  
   - [Activity Timeline](#activity-timeline)  
+- [Deploy with Docker](#deploying-locally-with-docker)
 - [Deploying locally](#deploying-locally)  
   - [Backend](#backend)  
   - [Frontend](#frontend)
@@ -52,6 +53,26 @@ I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs
 9. ### Activity Timeline
     - This function creates a 2-hour interval timeline of request volume by grouping log timestamps. It helps visualize traffic trends over time.
     - Sudden spikes or drops in activity can reveal unusual behavior, such as bursts of automated traffic, downtime, or potential attacks.
+
+## Deploying locally with Docker
+---
+This app consists of a React (Vite) frontend and a Flask backend, orchestrated with Docker Compose.
+1. Open cmd, be at the root level
+2. You need to pass the VITE_CLERK_PUBLISHABLE_KEY environment variable when building the containers.
+    For Linux/Mac:
+    ```sh
+    VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key_here docker-compose up --build
+    ```
+    For Windows (Command Prompt):
+    ```sh
+    set VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key_here
+    ```
+    ```sh
+    docker-compose up --build
+    ```
+    VITE_BASE_URL is hardcoded as http://localhost:5000 in the docker-compose.yml.
+    Replace your_clerk_key_here with your actual Clerk publishable key.
+
 ## Deploying locally
 ---
 
