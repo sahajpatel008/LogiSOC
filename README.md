@@ -3,6 +3,7 @@ A web application for SOC analysts
 
 ### Table of Contents
 
+- [Live Demo](#demo)
 - [Logs Dataset](#logs-dataset)  
 - [Anomaly Detection](#anomaly-detection)  
   - [Top domain referrers](#top-domain-referrers)  
@@ -14,12 +15,22 @@ A web application for SOC analysts
   - [Detection of Burst Activity](#detection-of-burst-activity)  
   - [Detection of Data Exfiltration Attempts](#detection-of-data-exfiltration-attempts)  
   - [Activity Timeline](#activity-timeline)  
+- [Run with Docker](#run-with-docker)
 - [Deploying locally](#deploying-locally)  
   - [Backend](#backend)  
   - [Frontend](#frontend)
 
+## Demo
+Live at:  https://logisoc-frontend.fly.dev/ 
+For log files see [Logs Dataset](#logs-dataset) 
+
 ## Logs Dataset
 I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs](https://www.secrepo.com/self.logs/). Any of the web access logs can be used for analysis. Some of them are stored in `log_samples/`.
+
+> ⚠️ **IMPORTANT:**  
+> **BEFORE YOU DO ANALYSIS: PLEASE CHANGE THE EXTENSION OF THESE FILES TO `.log` IF NOT ALREADY.**  
+> This step is required for the analysis to work correctly.
+> `log_samples/` already has files with .log extension. 
 
 ## Anomaly Detection
 1. ### Top domain referrers
@@ -52,6 +63,26 @@ I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs
 9. ### Activity Timeline
     - This function creates a 2-hour interval timeline of request volume by grouping log timestamps. It helps visualize traffic trends over time.
     - Sudden spikes or drops in activity can reveal unusual behavior, such as bursts of automated traffic, downtime, or potential attacks.
+
+## Run with Docker
+---
+This app consists of a React (Vite) frontend and a Flask backend, orchestrated with Docker Compose.
+1. Open cmd, be at the root level
+2. You need to pass the VITE_CLERK_PUBLISHABLE_KEY environment variable when building the containers.
+    For Linux/Mac:
+    ```sh
+    VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key_here docker-compose up --build
+    ```
+    For Windows (Command Prompt):
+    ```sh
+    set VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key_here
+    ```
+    ```sh
+    docker-compose up --build
+    ```
+    VITE_BASE_URL is hardcoded as http://localhost:5000 in the docker-compose.yml.
+    Replace your_clerk_key_here with your actual Clerk publishable key.
+
 ## Deploying locally
 ---
 
@@ -72,9 +103,9 @@ I have used the [SecRepo](https://www.secrepo.com/)'s => [Web Server Access Logs
 
 4. Install dependencies:
     ```sh
-    pip install -r requirements.txt
+    pip install -r backend/requirements.txt
     ```
-5. Make .env file on the root level (same level .gitignore)
+5. Make backend/.env file
     ```sh
     VIRUS_TOTAL_KEY=#enter your virus  total key
     CLERK_JWT_ISSUER= #enter from clerk API website, (project settings -> api )

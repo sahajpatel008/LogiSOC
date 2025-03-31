@@ -1,7 +1,7 @@
 // src/components/FileUpload.tsx
 import React, { useRef, useState } from 'react';
 import {
-  Box, Button, Typography, Paper, Stack
+  Button, Typography, Paper, Stack
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 

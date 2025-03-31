@@ -3,6 +3,7 @@ venv/
 uploads/
 resources/
 backend/__pycache__/
+fly.toml/
 
 # Ignore frontend logs
 frontend/logs

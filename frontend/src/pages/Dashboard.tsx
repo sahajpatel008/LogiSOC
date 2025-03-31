@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import DynamicTable from '../components/DynamicTable';
 import FileUpload from '../components/FileUpload';
@@ -85,7 +85,7 @@ const Dashboard = () => {
     formData.append('file', file);
 
     try {
-      await axios.post('http://127.0.0.1:5000/upload', formData, {
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/upload`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
